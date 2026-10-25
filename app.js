@@ -4,8 +4,8 @@
  */
 (() => {
   'use strict';
-  const SUPABASE_URL = 'PASTE_YOUR_SUPABASE_PROJECT_URL_HERE';
-  const SUPABASE_PUBLISHABLE_KEY = 'PASTE_YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY_HERE';
+  const SUPABASE_URL = window.APP_CONFIG?.SUPABASE_URL || '';
+  const SUPABASE_PUBLISHABLE_KEY = window.APP_CONFIG?.SUPABASE_KEY || '';
   const SCHEMA = 'myhustlebudget';
   const $ = (s, root=document) => root.querySelector(s);
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
