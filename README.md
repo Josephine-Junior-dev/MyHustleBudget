@@ -29,7 +29,7 @@ The Supabase client is configured with `db.schema = 'myhustlebudget'`, so the ap
 - `budgets(id, user_id, business_id, category, budget_amount, period, created_at)`
 - `savings(id, user_id, business_id, goal_name, target_amount, saved_amount, target_date, created_at)`
 
-Product/stock tables are not yet exposed in the first frontend version.
+Buying & Selling inventory uses `inventory_products` and `inventory_sales` in the dedicated `myhustlebudget` schema. Run `inventory_setup.sql` in the Supabase SQL Editor before using this feature. Product sales reduce stock and create matching income and cost-of-goods transactions.
 
 ## Publish on GitHub Pages
 Repository **Settings → Pages → Deploy from a branch → main → / (root) → Save**.
