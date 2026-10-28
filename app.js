@@ -72,4 +72,10 @@
   // Add sign-out action from the account badge by long-pressing it; keeps the mobile header uncluttered.
   $('#avatar').title='Tap to sign out';$('#avatar').style.cursor='pointer';$('#avatar').addEventListener('click',()=>{if(confirm('Sign out of MyHustleBudget?'))signOut();});
   setAuthMode('signin');
+
+/* M-Pesa import bridge: saves into the signed-in user's existing transaction table. */
+async function saveMpesaRows(rows){if(!client||!user||!currentBusiness)throw Error('Sign in and finish business setup first.');const seen=new Set(transactions.map(t=>[t.transaction_date,t.transaction_type,Number(t.amount),String(t.description||'').trim().toLowerCase()].join('|')));const fresh=rows.filter(x=>!seen.has([x.date,x.type,Number(x.amount),x.description.trim().toLowerCase()].join('|')));if(!fresh.length){toast('Selected transactions are already recorded.');return}const {error}=await client.from('transactions').insert(fresh.map(x=>({user_id:user.id,business_id:currentBusiness.id,transaction_type:x.type,category:x.category,description:x.description,amount:Number(x.amount),transaction_date:x.date,payment_method:'mpesa'})));if(error)throw error;await loadData();toast('Imported '+fresh.length+' M-Pesa transaction(s).'+(rows.length>fresh.length?' '+(rows.length-fresh.length)+' duplicate(s) skipped.':''))}
+function mountMpesaButton(){const target=$('#page-transactions .panel-head .btn-row');if(target&&!$('#importMpesaBtn')){const b=document.createElement('button');b.id='importMpesaBtn';b.className='btn secondary';b.textContent='📥 Import M-Pesa';b.onclick=()=>window.MpesaImporter.open(saveMpesaRows,toast);target.prepend(b)}}
+new MutationObserver(mountMpesaButton).observe(document.body,{childList:true,subtree:true});mountMpesaButton();
+
 })();
